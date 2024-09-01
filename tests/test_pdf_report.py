@@ -35,6 +35,6 @@ class TestPdfReport:
         mock_instance.cell.assert_any_call(w=0, h=50, txt="Bill Month: January 2024", border=0, ln=1)
         mock_instance.cell.assert_any_call(w=0, h=30, txt="Flatmate1 pays £100 for 20 days.", border=0, ln=1)
         mock_instance.cell.assert_any_call(w=0, h=30, txt="Flatmate2 pays £150 for 25 days.", border=0, ln=1)
-        mock_instance.output.assert_called_once_with("test_report.pdf", 'F')
+        mock_instance.output.assert_called_once_with("files/test_report.pdf", 'F')
 
         

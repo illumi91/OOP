@@ -48,7 +48,6 @@ class PdfReport:
         )
 
         # Output the PDF
-        pdf.output(self.filename, 'F')
-        
-        webbrowser.open("file://" + os.path.realpath(self.filename))
+        pdf.output(f"files/{self.filename}", 'F')
+        webbrowser.open("file://" + os.path.realpath(f"files/{self.filename}"))
 
