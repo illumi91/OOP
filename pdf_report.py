@@ -1,3 +1,5 @@
+import os
+import webbrowser
 from fpdf import FPDF
 
 class PdfReport:
@@ -47,4 +49,6 @@ class PdfReport:
 
         # Output the PDF
         pdf.output(self.filename, 'F')
+        
+        webbrowser.open("file://" + os.path.realpath(self.filename))
 
