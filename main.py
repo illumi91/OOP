@@ -1,6 +1,7 @@
 from bill import Bill
 from flatmate import Flatmate
-from pdf_report import PdfReport
+from pdf_report import FileSharer, PdfReport
+from pathlib import Path
 
 def main():
     amount = float(input("Hello user, what is the total bill amount to split? "))
@@ -19,6 +20,11 @@ def main():
 
     pdf_report = PdfReport(filename=f"{bill.period}.pdf")
     pdf_report.generate(flatmate1, flatmate2, bill)
+    
+    directory = Path("files")
+    
+    file_sharer = FileSharer(filepath=directory / pdf_report.filename)
+    print(file_sharer.share())
 
 if __name__ == "__main__":
     main()

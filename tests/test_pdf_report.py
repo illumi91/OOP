@@ -1,5 +1,9 @@
+import os
 from unittest.mock import MagicMock
-from pdf_report import PdfReport
+from pdf_report import FileSharer, PdfReport
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class TestPdfReport:
 
@@ -8,6 +12,7 @@ class TestPdfReport:
         assert test_pdf_report.filename == "test_filename.pdf"
 
     def test_generate(self, mocker):
+        mock_webbrowser = mocker.patch("pdf_report.webbrowser.open")
         pdf_report = PdfReport("test_report.pdf")
 
         mock_pdf = mocker.patch("pdf_report.FPDF", autospec=True)
@@ -36,5 +41,27 @@ class TestPdfReport:
         mock_instance.cell.assert_any_call(w=0, h=30, txt="Flatmate1 pays £100 for 20 days.", border=0, ln=1)
         mock_instance.cell.assert_any_call(w=0, h=30, txt="Flatmate2 pays £150 for 25 days.", border=0, ln=1)
         mock_instance.output.assert_called_once_with("files/test_report.pdf", 'F')
-
         
+        mock_webbrowser.assert_called_once_with("file://" + os.path.realpath(f"files/test_report.pdf"))
+
+
+class TestFileSharer:
+    
+    def test_share(self, mocker):
+        
+        mock_client = mocker.patch("pdf_report.Client")
+        
+        mock_filelink = MagicMock()
+        mock_filelink.url = "http://example.com/sharedfile"
+        
+        mock_client.return_value.upload.return_value = mock_filelink
+        
+        sharer = FileSharer(filepath="testfile.txt")
+        
+        result = sharer.share()
+        
+        assert result == "http://example.com/sharedfile"
+        
+        mock_client.assert_called_once_with(os.getenv("FILESTACK_API_KEY"))
+        
+        mock_client.return_value.upload.assert_called_once_with(filepath="testfile.txt")
